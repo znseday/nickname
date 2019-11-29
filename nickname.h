@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <utility>
 #include <cassert>
-#include <memory.h>
 
 using namespace std;
 
