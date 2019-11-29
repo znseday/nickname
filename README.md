@@ -1,4 +1,4 @@
 # nickname
-hw_07 for OTUS
+hw_08 for OTUS
 
-The task description is in 'Task_bulk.pdf'
+The task description is in 'Task_nickname.pdf'
