@@ -1,11 +1,14 @@
 #pragma once
 
 #include <iostream>
-#include <map>
+#include <vector>
 #include <iterator>
 #include <algorithm>
 #include <utility>
 #include <cassert>
+#include <memory>
+#include <cstring>
+
 
 using namespace std;
 
@@ -22,14 +25,65 @@ using namespace std;
 #define MY_DEBUG_ONLY(x) (x)
 #endif
 
+using namespace std;
+
+class RadixTrie;
+
 void TestBasic();
-void TestMainTask();
+void MainTask(const RadixTrie &rt, const vector<string> &srcData);
 //-----------------------------------------------
 
-
-class RadixTree
+struct Node
 {
-	
+    string name;
+    bool finished = true;
+    bool last = false;
+    //<unique_ptr<Node>, 26> next = {nullptr};
+    Node *next[26];
+    Node() {memset(next, 0, sizeof(next));}
+    Node(string _name, bool _finished) : name(std::move(_name)), finished(_finished) {memset(next, 0, sizeof(next));}
+};
+//-----------------------------------------------
+
+class RadixTrie
+{
+private:
+    //unique_ptr<Node> root = nullptr;
+    Node *root = nullptr;
+
+    //void InsertInside(unique_ptr<Node> &curNode, string &_name);
+    //int FindInside(const unique_ptr<Node> &curNode, const string &_name);
+
+    void InsertInside(Node * &curNode, string &_name);
+    //int FindInside(const Node *curNode, const string &_name, int level);
+
+    void PrintMeInside(Node *curNode, int level) const;
+    void PrintMeInsidePro(Node *curNode, int level, vector<bool> &opens) const;
+
+    void FindMinPrefixInside(const Node *curNode, const string &_name, string &res) const;
+
+    mutable size_t maxLevel = 0;
+    void CalcMaxLevelInside(Node *curNode, size_t level) const;
+
+public:
+
+    RadixTrie() {}
+    //~RadixTrie() {Clear();}
+
+    //void Clear();
+    void Insert(const string &_name);
+    //int Find(const string &_name);
+
+    void PrintMe() const;
+    void PrintMePro() const;
+
+    void PrintNamePrefixes(const vector<string> &srcData) const;
+
+    string FindMinPrefix(const std::string &_name) const;
+
+    void CalcMaxLevel() const;
+    int GetMaxLevel() const {return maxLevel;}
+
 };
 
 
