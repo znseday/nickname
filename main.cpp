@@ -46,6 +46,14 @@ int main()
         srcData.emplace_back(line);
     }
 
+    // temp
+    rt.Insert("aleksey"); cout << endl;
+    rt.Insert("sasha");   cout << endl;
+    rt.Insert("aleks");   cout << endl;
+    rt.Insert("alek");    cout << endl;
+    rt.Insert("alesha");  cout << endl;
+    rt.Insert("maksim");  cout << endl;
+
     MainTask(rt, srcData);
 
     return 0;
