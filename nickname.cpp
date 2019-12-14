@@ -237,13 +237,16 @@ void RadixTrie::PrintMeInsidePro(Node *curNode, int level, vector<bool> &opens) 
             wcout << "$";
 
         MY_EX_OUTPUT(
-            cout << "   ------>";
+            cout << "   --->";
             for (int i = 0; i < 26; i++)
                 if (curNode->next[i])
                    cout << "   " << char(i+'a');
 
             if (curNode->last)
-                cout << "   ------> last";
+                cout << "   ---> last";
+
+            if (curNode->finished)
+                wcout << "   ---> finished";
         )
 
         cout << endl;
@@ -307,6 +310,7 @@ void RadixTrie::FindMinPrefixInside(const Node *curNode, string &_name, string &
         FindMinPrefixInside(curNode, _name, res);
     }
 }
+//------------------------------------------------------
 
 
 

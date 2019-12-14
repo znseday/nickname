@@ -9,7 +9,6 @@
 
 using namespace std;
 
-
 int main(int argc, char *argv[])
 {
     for(int i = 1; i < argc; i++)
@@ -19,7 +18,7 @@ int main(int argc, char *argv[])
 #if (defined WIN32) || (defined WIN64)
     cout << MY_P_FUNC << endl;              // for debugging
 
-    //MY_DEBUG_ONLY(TestBasic());           // for debugging
+    MY_DEBUG_ONLY(TestBasic();)           // for debugging
 
     ifstream i_stream = ifstream("my_own_test.txt");
     if (!i_stream)
@@ -61,12 +60,11 @@ void TestBasic()
 
     RadixTrie rt;
 
-//    rt.Insert("serg");    cout << endl;
-//    rt.Insert("sergoga"); cout << endl;
-//    rt.Insert("masha");   cout << endl;
-//    rt.Insert("sergey");  cout << endl;
+    rt.Insert("serg");    cout << endl;
+    rt.Insert("sergoga"); cout << endl;
+    rt.Insert("masha");   cout << endl;
+    rt.Insert("sergey");  cout << endl;
 
-    // doesn't work "aleksey" with "k"
     rt.Insert("aleksey"); cout << endl;
     rt.Insert("alesha");  cout << endl;
     rt.Insert("sasha");   cout << endl;
@@ -93,17 +91,19 @@ void MainTask(const RadixTrie &rt, const vector<string> &srcData)
     cout << endl;
 
     rt.CalcMaxLevel();
-    cout << "maxLevel = " << rt.GetMaxLevel() << endl;
+    MY_EX_OUTPUT( cout << "maxLevel = " << rt.GetMaxLevel() << endl;)
 
     cout << endl;
     rt.PrintMePro();
     cout << endl;
 
-    rt.PrintNamePrefixes(srcData); // 11111111111111111
+    rt.PrintNamePrefixes(srcData);
 
-    cout << endl;
-    rt.PrintMePro();
-    cout << endl;
+    MY_EX_OUTPUT(
+        cout << endl;
+        rt.PrintMePro();    // to be sure that it still works)
+        cout << endl;
+    )
 
     cout << "//-------------------" << endl;
 }

@@ -27,7 +27,7 @@ using namespace std;
 
 extern bool IsExOutput;
 
-#define MY_EX_OUTPUT(x) { if(IsExOutput) {x}    }
+#define MY_EX_OUTPUT(x) { if(IsExOutput) {x}  }
 
 using namespace std;
 
@@ -42,7 +42,6 @@ struct Node
     string name;
     bool finished = true;
     bool last = false;
-    //<unique_ptr<Node>, 26> next = {nullptr};
     Node *next[26];
     Node() {memset(next, 0, sizeof(next));}
     Node(string _name, bool _finished) : name(std::move(_name)), finished(_finished) {memset(next, 0, sizeof(next));}
@@ -52,7 +51,7 @@ struct Node
 class RadixTrie
 {
 private:
-    //unique_ptr<Node> root = nullptr;
+
     Node *root = nullptr;
 
     void InsertInside(Node * &curNode, string &_name);
@@ -79,7 +78,7 @@ public:
     string FindMinPrefix(std::string _name) const;
 
     void CalcMaxLevel() const;
-    int GetMaxLevel() const {return maxLevel;}
+    size_t GetMaxLevel() const {return maxLevel;}
 
 };
 
