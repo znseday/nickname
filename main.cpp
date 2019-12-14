@@ -10,8 +10,12 @@
 using namespace std;
 
 
-int main()
+int main(int argc, char *argv[])
 {
+    for(int i = 1; i < argc; i++)
+        if (strcmp(argv[1], "-ext") == 0)
+            IsExOutput = true;
+
 #if (defined WIN32) || (defined WIN64)
     cout << MY_P_FUNC << endl;              // for debugging
 
@@ -27,7 +31,7 @@ int main()
     istream &i_stream = cin;
 #endif
 
-    MY_DEBUG_ONLY(cout << "Homework nickname (DEBUG detected)" << endl);
+    MY_DEBUG_ONLY(cout << "Homework nickname (DEBUG detected)" << endl;)
 
     RadixTrie rt;
 
@@ -46,14 +50,6 @@ int main()
         srcData.emplace_back(line);
     }
 
-    // temp
-    rt.Insert("aleksey"); cout << endl;
-    rt.Insert("sasha");   cout << endl;
-    rt.Insert("aleks");   cout << endl;
-    rt.Insert("alek");    cout << endl;
-    rt.Insert("alesha");  cout << endl;
-    rt.Insert("maksim");  cout << endl;
-
     MainTask(rt, srcData);
 
     return 0;
@@ -70,12 +66,21 @@ void TestBasic()
 //    rt.Insert("masha");   cout << endl;
 //    rt.Insert("sergey");  cout << endl;
 
+    // doesn't work "aleksey" with "k"
     rt.Insert("aleksey"); cout << endl;
+    rt.Insert("alesha");  cout << endl;
     rt.Insert("sasha");   cout << endl;
     rt.Insert("aleks");   cout << endl;
     rt.Insert("alek");    cout << endl;
-    rt.Insert("alesha");  cout << endl;
     rt.Insert("maksim");  cout << endl;
+
+    cout << endl << "PrintMePro from TestBasic:" << endl;
+    rt.CalcMaxLevel();
+    rt.PrintMePro();
+    cout << endl;
+
+    vector<string> t{"aleksey", "maksim"};
+    rt.PrintNamePrefixes(t);
 
     cout << "//-------------------" << endl;
 }
@@ -94,15 +99,11 @@ void MainTask(const RadixTrie &rt, const vector<string> &srcData)
     rt.PrintMePro();
     cout << endl;
 
-   // rt.PrintNamePrefixes(srcData); // 11111111111111111
+    rt.PrintNamePrefixes(srcData); // 11111111111111111
 
-    vector<string> t{"aleksey", "maksim"};
-
-    //rt.PrintNamePrefixes(t);
-
-    //cout << endl;
-    //rt.PrintMe();
-    //cout << endl;
+    cout << endl;
+    rt.PrintMePro();
+    cout << endl;
 
     cout << "//-------------------" << endl;
 }

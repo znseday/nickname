@@ -3,28 +3,30 @@
 
 #include "nickname.h"
 
+bool IsExOutput = false;
+
 using namespace std;
 
 //------------------------------------------------------
 
 void RadixTrie::InsertInside(Node * &curNode, string &_name)
 {
-    MY_DEBUG_ONLY(cout << "_name = " << _name << endl);     // for debugging
+    MY_DEBUG_ONLY(   cout << "_name = " << _name << endl;   )     // for debugging
 
     if (!curNode)
     {
         curNode = new Node(_name, true);
-        MY_DEBUG_ONLY(cout << "item = " << curNode->name << (curNode->finished?"$":" ") << endl);
+        MY_DEBUG_ONLY(cout << "item = " << curNode->name << (curNode->finished?"$":" ") << endl;)
         return;
     }
 
     auto pos = mismatch(curNode->name.cbegin(), curNode->name.cend(), _name.cbegin(), _name.cend());
 
     string common{_name.cbegin(), pos.second};
-    MY_DEBUG_ONLY(cout << "common = " << common << endl);     // for debugging
+    MY_DEBUG_ONLY(cout << "common = " << common << endl;)     // for debugging
 
     _name.erase(_name.cbegin(), pos.second);
-    MY_DEBUG_ONLY(cout << "_name after erase = " << _name << endl);     // for debugging
+    MY_DEBUG_ONLY(cout << "_name after erase = " << _name << endl;)    // for debugging
 
     if (common == curNode->name)
     {
@@ -33,31 +35,32 @@ void RadixTrie::InsertInside(Node * &curNode, string &_name)
         else
         {
             size_t ind = static_cast<size_t>(*_name.cbegin() - 'a');
-            MY_DEBUG_ONLY(cout << "index = " << ind << endl);   // for debugging
+            MY_DEBUG_ONLY(cout << "index = " << ind << endl;)  // for debugging
             InsertInside(curNode->next[ind], _name);
         }
 
     }
     else
     {
-        MY_DEBUG_ONLY(cout << "common != curNode->name : " << curNode->name << endl); // for debugging
+        MY_DEBUG_ONLY(cout << "common != curNode->name : " << curNode->name << endl;) // for debugging
         Node *tempNode = new Node(common, _name.empty() );
 
         //tempNode->name = string{tempNode->name.cbegin(), tempNode->name.cbegin()+common.size()};
         //curNode = new Node(common, _name.empty() );
 
-        size_t ind = static_cast<size_t>(*curNode->name.cbegin() - 'a');
+        //size_t ind = static_cast<size_t>(*curNode->name.cbegin() - 'a');
+        size_t ind = static_cast<size_t>(*pos.first - 'a');
 
         //curNode->next[ind] = tempNode;
 
         tempNode->next[ind] = curNode;
 
-        MY_DEBUG_ONLY(cout << "item = " << tempNode->name << (tempNode->finished?"$":" ") << endl);
+        MY_DEBUG_ONLY(cout << "item = " << tempNode->name << (tempNode->finished?"$":" ") << endl;)
         if (!_name.empty())
         {
             ind = static_cast<size_t>(*_name.cbegin() - 'a');
             tempNode->next[ind] = new Node(_name, true);
-            MY_DEBUG_ONLY(cout << "item = " << tempNode->next[ind]->name << (tempNode->next[ind]->finished?"$":" ") << endl);
+            MY_DEBUG_ONLY(cout << "item = " << tempNode->next[ind]->name << (tempNode->next[ind]->finished?"$":" ") << endl;)
 
         }
 
@@ -108,9 +111,9 @@ void RadixTrie::Insert(const string &_name)
 //            root->next[(*pos.second)-'a'] = newNode;
 //            return;
 //        }
-//        if (pos.first == temp->name.cbegin()) // несовпадение в первой букве
+//        if (pos.first == temp->name.cbegin()) // mismath in the first symbol
 //        {
-//            if (temp == root) // если в корне, то разбиваем на два и делаем новый корень
+//            if (temp == root) // if it's root, devide into two nodes
 //            {
 //                Node *newNode = new Node;
 //                newNode->name = _name;
@@ -152,7 +155,6 @@ void RadixTrie::PrintMeInside(Node *curNode, int level) const
 
         level++;
 
-
         for (int i = 0; i < 26; i++)
             if (curNode->next[i])
                 PrintMeInside(curNode->next[i], level);
@@ -185,12 +187,11 @@ void RadixTrie::CalcMaxLevelInside(Node *curNode, size_t level) const
     if (_last >= 0)
         curNode->next[_last]->last = true;
 }
-
 //------------------------------------------------------
 
 void RadixTrie::PrintMePro() const
 {
-    setlocale(0, "English");
+    //setlocale(0, "English"); // doesn't work in Qt
     vector<bool> opens;
     opens.resize(maxLevel, false);
     PrintMeInsidePro(root, 0, opens);
@@ -199,36 +200,34 @@ void RadixTrie::PrintMePro() const
 
 void RadixTrie::PrintMeInsidePro(Node *curNode, int level, vector<bool> &opens) const
 {
-    //static bool flag = true;
-
     if (curNode != nullptr)
     {
         for (int i = 0; i < level; i++)
         {
             if (opens[(size_t)i] && i < level-1)
             {
-                //wcout << L"|";
-                wcout << wchar_t(0x2502);  //2502
+                cout << "|";
+                //wcout << wchar_t(0x2502);  // doesn't work
             }
             else if (i == level-1)
             {
                 if (curNode->last)
                 {
-                    //wcout << "\\";  // back slash
-                    wcout << wchar_t(0x2514);
+                    cout << "\\";  // back slash
+                    //wcout << wchar_t(0x2514);     // doesn't work
 
                     opens[(size_t)i] = false;
                 }
                 else
                 {
-                    //cout << "+";
-                    wcout << wchar_t(0x251c);
+                    cout << "+";
+                    //wcout << wchar_t(0x251c);   // doesn't work
                     opens[(size_t)i] = true;
                 }
             }
             else
             {
-                wcout << " ";
+                cout << " ";
             }
         }
 
@@ -237,25 +236,25 @@ void RadixTrie::PrintMeInsidePro(Node *curNode, int level, vector<bool> &opens) 
         if (curNode->finished)
             wcout << "$";
 
-        if (curNode->last)
-        {
-            MY_DEBUG_ONLY( wcout << "   last");
-        }
+        MY_EX_OUTPUT(
+            cout << "   ------>";
+            for (int i = 0; i < 26; i++)
+                if (curNode->next[i])
+                   cout << "   " << char(i+'a');
 
-        wcout << endl;
+            if (curNode->last)
+                cout << "   ------> last";
+        )
+
+        cout << endl;
 
         level++;
 
-        bool g = false;
         for (int i = 0; i < 26; i++)
         {
             if (curNode->next[i])
             {
                 PrintMeInsidePro(curNode->next[i], level, opens);
-                if (!g)
-                {                
-                    g = true;
-                }
             }
         }
     }
@@ -266,15 +265,14 @@ void RadixTrie::PrintNamePrefixes(const vector<string> &srcData) const
 {
     for (auto s : srcData)
     {
-        cout << s << " ---> " << FindMinPrefix(s) <<  endl;
-
-        cout << endl;
+        cout << s << " ";
+        MY_EX_OUTPUT(cout << " ---> ";)
+        cout << FindMinPrefix(s) <<  endl;
     }
 }
 //------------------------------------------------------
 
-
-string RadixTrie::FindMinPrefix(const std::string &_name) const
+string RadixTrie::FindMinPrefix(std::string _name) const
 {
     string res;
     FindMinPrefixInside(root, _name, res);
@@ -282,7 +280,7 @@ string RadixTrie::FindMinPrefix(const std::string &_name) const
 }
 //------------------------------------------------------
 
-void RadixTrie::FindMinPrefixInside(const Node *curNode, const string &_name, string &res) const
+void RadixTrie::FindMinPrefixInside(const Node *curNode, string &_name, string &res) const
 {
     if (!curNode)
         return;
@@ -290,7 +288,7 @@ void RadixTrie::FindMinPrefixInside(const Node *curNode, const string &_name, st
     auto pos = mismatch(curNode->name.cbegin(), curNode->name.cend(), _name.cbegin(), _name.cend());
 
     string common{_name.cbegin(), pos.second};
-    MY_DEBUG_ONLY(cout << "common = " << common << endl);     // for debugging
+    //MY_DEBUG_ONLY(cout << "common = " << common << endl;)     // for debugging
 
     if (common == _name)
     {
@@ -298,21 +296,16 @@ void RadixTrie::FindMinPrefixInside(const Node *curNode, const string &_name, st
     }
     else
     {
-
-
-   // if (common.empty())
-   //     return;
-   //else
-   // {
         size_t ind = static_cast<size_t>(*pos.second - 'a');
-        MY_DEBUG_ONLY(cout << "index = " << ind << endl);         // for debugging
+        //MY_DEBUG_ONLY(cout << "index = " << ind << endl;)         // for debugging
 
         res += common;
-        curNode = curNode->next[ind];
-        FindMinPrefixInside(curNode, _name, res);
+        _name.erase(_name.cbegin(), _name.cbegin() + curNode->name.size());
 
+        curNode = curNode->next[ind];
+
+        FindMinPrefixInside(curNode, _name, res);
     }
-  //  }
 }
 
 

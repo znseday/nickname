@@ -31,7 +31,7 @@ else()
             CXX_STANDARD_REQUIRED ON
             COMPILE_OPTIONS "-Wpedantic;-Wall;-Wextra")
 
-    #set(CMAKE_BUILD_TYPE Release)
+    set(CMAKE_BUILD_TYPE Release)
 endif()
 
 #set_target_properties(my_tests PROPERTIES

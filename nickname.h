@@ -22,8 +22,12 @@ using namespace std;
 #if ((defined NDEBUG) || (defined _NDEBUG))
 #define MY_DEBUG_ONLY(x)
 #else
-#define MY_DEBUG_ONLY(x) (x)
+#define MY_DEBUG_ONLY(x) {x}
 #endif
+
+extern bool IsExOutput;
+
+#define MY_EX_OUTPUT(x) { if(IsExOutput) {x}    }
 
 using namespace std;
 
@@ -51,16 +55,12 @@ private:
     //unique_ptr<Node> root = nullptr;
     Node *root = nullptr;
 
-    //void InsertInside(unique_ptr<Node> &curNode, string &_name);
-    //int FindInside(const unique_ptr<Node> &curNode, const string &_name);
-
     void InsertInside(Node * &curNode, string &_name);
-    //int FindInside(const Node *curNode, const string &_name, int level);
 
     void PrintMeInside(Node *curNode, int level) const;
     void PrintMeInsidePro(Node *curNode, int level, vector<bool> &opens) const;
 
-    void FindMinPrefixInside(const Node *curNode, const string &_name, string &res) const;
+    void FindMinPrefixInside(const Node *curNode, string &_name, string &res) const;
 
     mutable size_t maxLevel = 0;
     void CalcMaxLevelInside(Node *curNode, size_t level) const;
@@ -68,18 +68,15 @@ private:
 public:
 
     RadixTrie() {}
-    //~RadixTrie() {Clear();}
 
-    //void Clear();
     void Insert(const string &_name);
-    //int Find(const string &_name);
 
     void PrintMe() const;
     void PrintMePro() const;
 
     void PrintNamePrefixes(const vector<string> &srcData) const;
 
-    string FindMinPrefix(const std::string &_name) const;
+    string FindMinPrefix(std::string _name) const;
 
     void CalcMaxLevel() const;
     int GetMaxLevel() const {return maxLevel;}
